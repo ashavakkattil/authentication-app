@@ -2,7 +2,7 @@
   <q-page class="flex flex-center" style="background: #eee">
     <q-card flat bordered class="q-pa-xl login-card">
       <q-form>
-        <div class="text-h5 text-weight-bold text-center">Login</div>
+        <div class="text-h4 text-weight-bold text-center">Login</div>
         <q-card-section class="q-pb-xs q-gutter-y-md">
           <q-input dense placeholder="Username or email">
             <template v-slot:prepend>
@@ -17,7 +17,7 @@
           <div class="text-right text-caption">Forgot password ?</div>
         </q-card-section>
         <q-card-actions class="justify-center q-gutter-y-xs q-mt-md">
-          <q-btn class="login-btn" rounded>Login</q-btn>
+          <q-btn class="login-btn text-weight-bolder" rounded>Login</q-btn>
           <div>
             Don't have an account yet ?
             <span class="q-mx-sm">Create</span>
