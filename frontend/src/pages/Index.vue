@@ -9,9 +9,22 @@
               <q-icon name="mdi-account-outline" size="xs"></q-icon>
             </template>
           </q-input>
-          <q-input dense placeholder="Password">
+          <q-input
+            dense
+            placeholder="Password"
+            :type="isPwd ? 'password' : 'text'"
+            v-model="password"
+          >
             <template v-slot:prepend>
               <q-icon name="mdi-lock-outline" size="xs"></q-icon>
+            </template>
+            <template v-slot:append>
+              <q-icon
+                :name="isPwd ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwd = !isPwd"
+                size="xs"
+              />
             </template>
           </q-input>
           <div class="text-right text-caption">Forgot password ?</div>
@@ -43,7 +56,13 @@
 
 <script>
 export default {
-  name: "PageIndex"
+  name: "PageIndex",
+  data() {
+    return {
+      isPwd: true,
+      password: ""
+    };
+  }
 };
 </script>
 <style scoped>
@@ -57,8 +76,11 @@ export default {
     45deg,
     /* #cee21c 20%,
     rgb(0, 255, 157) 51%,
-    #cee21c 100% */
-    #405de6 , #5851db, #833ab4,#c13584,#e13063
+    #cee21c 100% */ #405de6,
+    #5851db,
+    #833ab4,
+    #c13584,
+    #e13063
   );
 }
 .login-btn:hover {
