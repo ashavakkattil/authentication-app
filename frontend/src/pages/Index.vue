@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center" style="background: #eee">
-    <q-card flat bordered class="q-pa-xl login-card">
+    <q-card flat bordered class="q-pa-xl" :style="$q.screen.lt.lg ? '85%': '35%'">
       <q-form>
         <div class="text-h4 text-weight-bold text-center">Login</div>
         <q-card-section class="q-pb-xs q-gutter-y-md">
@@ -66,9 +66,6 @@ export default {
 };
 </script>
 <style scoped>
-.login-card {
-  width: 25%;
-}
 .login-btn {
   width: 98%;
   color: white;
