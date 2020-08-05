@@ -31,13 +31,13 @@
         </q-card-section>
         <q-card-actions class="justify-center q-gutter-y-xs q-mt-md">
           <q-btn class="login-btn text-weight-bolder" rounded>Login</q-btn>
-          <div>
-            Don't have an account yet ?
-            <span class="q-mx-sm">Create</span>
-          </div>
         </q-card-actions>
+        <div class="text-right">
+          <span>Don't have an account yet ?</span>
+          <q-btn flat class="q-mr-xs text-capitalize text-subtitle2">Create</q-btn>
+        </div>
       </q-form>
-      <div class="q-mt-lg text-center text-body2">
+      <div class="q-mt-xl text-center text-body2">
         <span>---------------</span>
         Sign In using
         <span>---------------</span>
