@@ -5,7 +5,7 @@ var UserSchema = new mongoose.Schema({
     email: String,
     password: String,
     phone_number: Number,
-    agency_name: String,
+    agency: String,
     active: {
         type: Boolean,
         default: false

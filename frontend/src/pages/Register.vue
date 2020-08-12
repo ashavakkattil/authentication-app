@@ -4,7 +4,7 @@
       <q-form>
         <div class="text-h4 text-weight-bold text-center">Register</div>
         <q-card-section class="q-pb-xs q-gutter-y-md">
-          <q-input dense placeholder="Username or email">
+          <q-input dense placeholder="Username or email" v-model="item.email">
             <template v-slot:prepend>
               <q-icon name="mdi-account-outline" size="xs"></q-icon>
             </template>
@@ -13,7 +13,7 @@
             dense
             placeholder="Password"
             :type="isPwd ? 'password' : 'text'"
-            v-model="password"
+            v-model="item.password"
           >
             <template v-slot:prepend>
               <q-icon name="mdi-lock-outline" size="xs"></q-icon>
@@ -27,19 +27,19 @@
               />
             </template>
           </q-input>
-          <q-input dense placeholder="Phone Number">
+          <q-input dense placeholder="Phone Number" v-model="item.phoneNumber">
             <template v-slot:prepend>
               <q-icon name="mdi-whatsapp" size="xs"></q-icon>
             </template>
           </q-input>
-          <q-input dense placeholder="Agency Name">
+          <q-input dense placeholder="Agency Name" v-model="item.agency">
             <template v-slot:prepend>
               <q-icon name="mdi-briefcase" size="xs"></q-icon>
             </template>
           </q-input>
         </q-card-section>
         <q-card-actions class="justify-center q-gutter-y-xs q-mt-md">
-          <q-btn class="login-btn text-weight-bolder" rounded>Register</q-btn>
+          <q-btn class="login-btn text-weight-bolder" rounded @click="register">Register</q-btn>
         </q-card-actions>
         <div class="text-right">
           <span>Already have an account ?</span>
@@ -52,17 +52,32 @@
 
 <script>
 export default {
-  name: "Login",
+  name: "Register",
   data() {
     return {
       isPwd: true,
-      password: "",
-      users: []
+      users: [],
+      item: {
+        email: "",
+        phone_number: "",
+        agency: "",
+        password: ""
+      }
     };
   },
   methods: {
     goToLogin() {
       this.$router.replace("/login");
+    },
+    register() {
+      this.$axios
+        .post("/users", this.item)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(e => {
+          console.log(e.message);
+        });
     }
   }
 };

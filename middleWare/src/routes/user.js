@@ -1,19 +1,30 @@
 const mongoose = require('mongoose')
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const User = require('../models/User')
-
+const sgMail = require('@sendgrid/mail')
 const router = express.Router()
 
 router.get('/', (req, res) => {
     res.send('Hello world!')
 })
 router.post('/', (req, res) => {
-    User.create(req.body, (error, user) => {
-        if (!error) {
-            const url = 'http://localhost:3000/users'
+    User.find({ email: req.body.email }, (error, user) => {
+        if (error) {
+            res.status(500).json({
+                error: error.message
+            })
+        } else if (user.length) {
+            res.json({
+                message: 'Email already registered'
+            })
+        } else {
+            var user = req.body
+            const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: '20m' })
+            const url = `http://localhost:3000/users/authenticate/${token}`
             sgMail.setApiKey(process.env.SENDGRID_API_KEY)
             const msg = {
-                to: 'ammose89@gmail.com',
+                to: req.body.email,
                 from: 'thetrailsandtales@gmail.com',
                 subject: 'Sending with SendGrid is Fun',
                 text: 'and easy to do anywhere, even with Node.js',
@@ -25,6 +36,27 @@ router.post('/', (req, res) => {
                 console.log(error)
             })
             res.send(user)
+        }
+    })
+})
+router.get('/authenticate/:token', (req, res) => {
+    jwt.verify(req.params.token, process.env.JWT_SECRET_KEY, (error, decodedToken) => {
+        if (!error) {
+            const user = decodedToken
+            user.user.active = true
+            User.create(user.user, (error, user) => {
+                if (error) {
+                    res.status(500).json({
+                        message: error.message
+                    })
+                } else {
+                    res.render('Login.vue')
+                    /* res.status(200).json({
+                        message: 'User created',
+                        data: user
+                    }) */
+                }
+            })
         }
     })
 })
