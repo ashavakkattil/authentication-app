@@ -5,11 +5,25 @@
 </template>
 <script>
 export default {
+  data() {
+    return {
+      token: ""
+    };
+  },
   mounted() {
-    console.log(this.$route);
+    this.token = this.$route.params.token;
   },
   methods: {
-    activateAccount() {}
+    activateAccount() {
+      this.$axios
+        .get("/users//authenticate/" + this.token)
+        .then(response => {
+          if (response && response.status === 200) {
+            this.$router.replace("/login");
+          }
+        })
+        .catch(e => console.log(e.message));
+    }
   }
 };
 </script>

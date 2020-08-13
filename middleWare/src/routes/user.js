@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
         } else {
             var user = req.body
             const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: '20m' })
-            const url = `http://localhost:3000/users/authenticate/${token}`
+            const url = `${process.env.CLIENT_URL}/#/authenticate/${token}`
             sgMail.setApiKey(process.env.SENDGRID_API_KEY)
             const msg = {
                 to: req.body.email,
@@ -31,11 +31,10 @@ router.post('/', (req, res) => {
                 html: `<strong>Click to confirm ${url}</strong>`,
             };
             sgMail.send(msg).then(() => {
-                console.log('Mail sent')
+                res.json({ message: 'Email has been sent' })
             }).catch(error => {
                 console.log(error)
             })
-            res.send(user)
         }
     })
 })
@@ -50,11 +49,10 @@ router.get('/authenticate/:token', (req, res) => {
                         message: error.message
                     })
                 } else {
-                    res.render('Login.vue')
-                    /* res.status(200).json({
+                    res.status(200).json({
                         message: 'User created',
                         data: user
-                    }) */
+                    })
                 }
             })
         }
