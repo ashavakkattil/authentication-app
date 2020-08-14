@@ -16,13 +16,13 @@ router.post('/', (req, res) => {
             })
         } else if (user.length) {
             res.json({
-                message: 'Email already registered'
+                warning: 'Email already registered'
             })
         } else {
             var user = req.body
             const token = jwt.sign({ user }, process.env.JWT_SECRET_KEY)
             const url = `${process.env.CLIENT_URL}/#/authenticate/${token}`
-            /* sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY)
             const msg = {
                 to: req.body.email,
                 from: 'thetrailsandtales@gmail.com',
@@ -31,13 +31,13 @@ router.post('/', (req, res) => {
                 html: `<strong>Click to confirm ${url}</strong>`,
             };
             sgMail.send(msg).then(() => {
-                res.json({
+                res.status(200).json({
                     message: 'Email has been sent',
                     success: true
                 })
             }).catch(error => {
                 console.log(error)
-            }) */
+            })
         }
     })
 })

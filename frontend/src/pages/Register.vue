@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-center" style="background: #eee">
     <q-card flat bordered class="q-pa-xl" :style="$q.screen.lt.lg ? '85%': '35%'">
-      <q-form>
+      <q-form @submit="register">
         <div class="text-h4 text-weight-bold text-center">Register</div>
         <q-card-section class="q-pb-xs q-gutter-y-md">
           <div class="text-red" v-show="error.length">
@@ -10,9 +10,14 @@
               <q-btn flat color="red" size="xs" icon="mdi-close" @click="error = ''"></q-btn>
             </span>
           </div>
-          <q-input dense placeholder="Username or email" v-model="item.email">
+          <q-input dense placeholder="Name" v-model="item.name" required>
             <template v-slot:prepend>
               <q-icon name="mdi-account-outline" size="xs"></q-icon>
+            </template>
+          </q-input>
+          <q-input dense placeholder="Email ID" v-model="item.email" required>
+            <template v-slot:prepend>
+              <q-icon name="mdi-email" size="xs"></q-icon>
             </template>
           </q-input>
           <q-input
@@ -20,6 +25,7 @@
             placeholder="Password"
             :type="isPwd ? 'password' : 'text'"
             v-model="item.password"
+            required
           >
             <template v-slot:prepend>
               <q-icon name="mdi-lock-outline" size="xs"></q-icon>
@@ -38,6 +44,7 @@
             placeholder="Confirm Password"
             :type="isPwdOk ? 'password' : 'text'"
             v-model="confirmedPassword"
+            required
           >
             <template v-slot:prepend>
               <q-icon name="mdi-lock-outline" size="xs"></q-icon>
@@ -51,19 +58,9 @@
               />
             </template>
           </q-input>
-          <q-input dense placeholder="Phone Number" v-model="item.phoneNumber">
-            <template v-slot:prepend>
-              <q-icon name="mdi-whatsapp" size="xs"></q-icon>
-            </template>
-          </q-input>
-          <q-input dense placeholder="Agency Name" v-model="item.agency">
-            <template v-slot:prepend>
-              <q-icon name="mdi-briefcase" size="xs"></q-icon>
-            </template>
-          </q-input>
         </q-card-section>
         <q-card-actions class="justify-center q-gutter-y-xs q-mt-md">
-          <q-btn class="login-btn text-weight-bolder" rounded @click="register">Register</q-btn>
+          <q-btn class="login-btn text-weight-bolder" rounded type="submit">Register</q-btn>
         </q-card-actions>
         <div class="text-right">
           <span>Already have an account ?</span>
@@ -83,9 +80,8 @@ export default {
       isPwdOk: true,
       users: [],
       item: {
+        name: "",
         email: "",
-        phone_number: "",
-        agency: "",
         password: ""
       },
       confirmedPassword: "",
@@ -101,12 +97,13 @@ export default {
         this.$axios
           .post("/users", this.item)
           .then(response => {
-            console.log(response, response.success);
             if (response.data.success === true) {
               this.$q.notify({
                 message: response.data.message,
                 color: "positive"
               });
+            } else if (response && response.data.warning.length) {
+              this.error = response.data.warning;
             }
           })
           .catch(e => {
