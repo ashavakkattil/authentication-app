@@ -16,7 +16,7 @@ export default {
   methods: {
     activateAccount() {
       this.$axios
-        .get("/users//authenticate/" + this.token)
+        .get("/users/authenticate/" + this.token)
         .then(response => {
           if (response && response.status === 200) {
             this.$router.replace("/login");

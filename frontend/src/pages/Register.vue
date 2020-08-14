@@ -4,6 +4,12 @@
       <q-form>
         <div class="text-h4 text-weight-bold text-center">Register</div>
         <q-card-section class="q-pb-xs q-gutter-y-md">
+          <div class="text-red" v-show="error.length">
+            <span>{{error}}</span>
+            <span class="float-right">
+              <q-btn flat color="red" size="xs" icon="mdi-close" @click="error = ''"></q-btn>
+            </span>
+          </div>
           <q-input dense placeholder="Username or email" v-model="item.email">
             <template v-slot:prepend>
               <q-icon name="mdi-account-outline" size="xs"></q-icon>
@@ -23,6 +29,24 @@
                 :name="isPwd ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer"
                 @click="isPwd = !isPwd"
+                size="xs"
+              />
+            </template>
+          </q-input>
+          <q-input
+            dense
+            placeholder="Confirm Password"
+            :type="isPwdOk ? 'password' : 'text'"
+            v-model="confirmedPassword"
+          >
+            <template v-slot:prepend>
+              <q-icon name="mdi-lock-outline" size="xs"></q-icon>
+            </template>
+            <template v-slot:append>
+              <q-icon
+                :name="isPwdOk ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                @click="isPwdOk = !isPwdOk"
                 size="xs"
               />
             </template>
@@ -56,13 +80,16 @@ export default {
   data() {
     return {
       isPwd: true,
+      isPwdOk: true,
       users: [],
       item: {
         email: "",
         phone_number: "",
         agency: "",
         password: ""
-      }
+      },
+      confirmedPassword: "",
+      error: ""
     };
   },
   methods: {
@@ -70,14 +97,24 @@ export default {
       this.$router.replace("/login");
     },
     register() {
-      this.$axios
-        .post("/users", this.item)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(e => {
-          console.log(e.message);
-        });
+      if (this.item.password === this.confirmedPassword) {
+        this.$axios
+          .post("/users", this.item)
+          .then(response => {
+            console.log(response, response.success);
+            if (response.data.success === true) {
+              this.$q.notify({
+                message: response.data.message,
+                color: "positive"
+              });
+            }
+          })
+          .catch(e => {
+            console.log(e.message);
+          });
+      } else {
+        this.error = "Passwords don't match";
+      }
     }
   }
 };
@@ -99,5 +136,9 @@ export default {
 }
 .login-btn:hover {
   background-position: right center; /* change the direction of the change here */
+}
+.error-alert {
+  height: 20px;
+  padding: 0px 5px;
 }
 </style>
